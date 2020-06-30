@@ -25,15 +25,17 @@
  * This extension realizes a new MagicWord __NUMBEREDHEADINGS__.
  * If an article contains this MagicWord, numbering of the
  * headings is performed regardless of the user preference setting.
- * 
+ *
  * How to use:
- * * include this extension in LocalSettings.php: 
+ * * include this extension in LocalSettings.php:
  *	 require_once($IP.'/extensions/MagicNoNumberedHeadings.php');
  * * Add "__NUMBEREDHEADINGS__" to any article of your choice.
- * 
+ *
  * @author Purodha Blissenbach
  * @version $Revision: 1.12
  */
+
+use MediaWiki\MediaWikiServices;
 
 if (!defined('MEDIAWIKI')) {
 	die("This requires the MediaWiki enviroment.");
@@ -55,7 +57,8 @@ class MagicNumberedHeadings {
 
 	static public function ParserBeforeInternalParse($parser, &$text, $stripState)
 	{
-		if (MagicWord::get( 'MAG_NUMBEREDHEADINGS' )->matchAndRemove( $text ) ) {
+		$mwf = MediaWikiServices::getInstance()->getMagicWordFactory();
+		if ($mwf->get( 'MAG_NUMBEREDHEADINGS' )->matchAndRemove( $text ) ) {
 			$parser->mOptions->setNumberHeadings(TRUE);
 		}
 		return true;
